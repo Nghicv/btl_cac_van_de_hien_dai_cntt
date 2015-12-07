@@ -98,6 +98,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.launcher3.DropTarget.DragObject;
+import com.android.launcher3.customview.GridActivity;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -352,6 +353,7 @@ public class Launcher extends Activity
         int cellX;
         int cellY;
     }
+    
 
     private Stats mStats;
 
@@ -2262,8 +2264,16 @@ public class Launcher extends Activity
      *
      * @param v The view that was clicked.
      */
+    
+    
+    
+    
+    // show all app in here
+    
     public void onClickAllAppsButton(View v) {
         showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+    	Intent i = new Intent(Launcher.this, GridActivity.class);
+    	startActivity(i);
     }
 
     public void onTouchDownAllAppsButton(View v) {

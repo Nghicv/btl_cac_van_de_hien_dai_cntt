@@ -14,5 +14,20 @@
 			<type>2</type>
 			<location>/home/nghicv/Android/Sdk/sources/android-19</location>
 		</link>
+		<link>
+			<name>.link1</name>
+			<type>2</type>
+			<location>/home/nghicv/Android/Sdk/sources/android-16</location>
+		</link>
+		<link>
+			<name>.link2</name>
+			<type>2</type>
+			<location>/home/nghicv/Android/Sdk/sources/android-23</location>
+		</link>
+		<link>
+			<name>.link3</name>
+			<type>2</type>
+			<location>/home/nghicv/Android/Sdk/sources/android-17</location>
+		</link>
 	</linkedResources>
 </projectDescription>

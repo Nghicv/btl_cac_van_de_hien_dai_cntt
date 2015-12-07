@@ -130,6 +130,7 @@ import phuong.SortApp;
 
 /**
  * Default launcher application.
+ * phuong
  */
 public class Launcher extends Activity implements View.OnClickListener,
 		OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {

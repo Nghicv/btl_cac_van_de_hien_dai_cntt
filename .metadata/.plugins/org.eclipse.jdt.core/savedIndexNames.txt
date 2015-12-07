@@ -1,3 +1,4 @@
-INDEX VERSION 1.126+/media/nghicv/DATA/Hoc_tap/Hoc_Ki/hoc_ki_7/cac_van_de_hien_dai_cua_cntt/btl_cac_van_de_hien_dai_cntt/.metadata/.plugins/org.eclipse.jdt.core
-916297566.index
-886245457.index
+INDEX VERSION 1.126+E:\android\adt-bundle-windows-x86-20140702\WorkSpace\btl_cac_van_de_hien_dai_cntt\.metadata\.plugins\org.eclipse.jdt.core
+607022840.index
+3606174277.index
+27742183.index

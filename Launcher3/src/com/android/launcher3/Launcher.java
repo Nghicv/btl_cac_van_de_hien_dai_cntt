@@ -129,12 +129,13 @@ import phuong.Pac;
 import phuong.SortApp;
 
 /**
- * Default launcher application.
- * phuong
+ * Default launcher application. phuong
  */
 public class Launcher extends Activity implements View.OnClickListener,
 		OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {
 
+	Point size;
+	Display display;
 	boolean show_right_view = false;
 	LinearLayout right_view;
 	DynamicGridView gridView;
@@ -143,7 +144,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 	List<Pac> pacs;
 	RelativeLayout icon;
 	DrawerAdapter adapter;
-	int topMargin = 100;
+	public static int topMargin = 300;
 	boolean isTouch = false;
 
 	// //////////////////////////////////////////////////////////
@@ -520,6 +521,9 @@ public class Launcher extends Activity implements View.OnClickListener,
 
 	@SuppressWarnings("deprecation")
 	private void addMyView() {
+		display = getWindowManager().getDefaultDisplay();
+		size = new Point();
+		display.getSize(size);
 		pm = getPackageManager();
 
 		android.widget.FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
@@ -576,7 +580,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (!isTouch) {
+				if (isTouch == false) {
 					if (drawer.isOpened()) {
 						drawer.animateClose();
 					} else {
@@ -585,7 +589,12 @@ public class Launcher extends Activity implements View.OnClickListener,
 				}
 			}
 		});
-
+		Log.d("phuong", "x: " +size.x);
+		Log.d("phuong" , "y: " + size.y );
+		
+		
+		
+		
 		icon.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -593,34 +602,46 @@ public class Launcher extends Activity implements View.OnClickListener,
 				// TODO Auto-generated method stub
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_MOVE:
+					isTouch = true;
 					LayoutParams lp = new RelativeLayout.LayoutParams(v
 							.getWidth(), v.getHeight());
 					lp.leftMargin = (int) event.getRawX() - v.getWidth() / 2;
-					topMargin = (int) event.getRawY() - v.getHeight() / 2;
+					if(lp.leftMargin > size.x - 100){
+						lp.leftMargin = size.x - 100;
+					}
+					if(event.getRawY() + 80 < size.y){
+						topMargin = (int) event.getRawY() - v.getHeight() / 2;
+						if(topMargin < 20){
+							topMargin = 20;
+						}
+					} else {
+						topMargin = size.y  - v.getHeight() - 5;
+						Log.d("phuong", "top margin: "+ topMargin);
+					}
+			
+					
+					
 					lp.topMargin = topMargin;
 
 					v.setLayoutParams(lp);
-					isTouch = true;
 					break;
 				case MotionEvent.ACTION_UP:
+
 					LayoutParams lpp = new RelativeLayout.LayoutParams(v
 							.getWidth(), v.getHeight());
 					int x = drawer.getWidth();
-					if(drawer.isOpened()){
+					if (drawer.isOpened()) {
 						lpp.leftMargin = x;
 					} else {
 						lpp.leftMargin = 0;
 					}
-					
-					topMargin = (int) event.getRawY() - v.getHeight() / 2;
 					lpp.topMargin = topMargin;
-
 					v.setLayoutParams(lpp);
+					
 					isTouch = false;
-					break;
 
 				}
-				
+
 				return false;
 			}
 		});

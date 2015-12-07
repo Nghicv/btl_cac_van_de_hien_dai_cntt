@@ -37,4 +37,6 @@
     <color name="outline_color">#FFFFFFFF</color>
     
     <color name="first_run_cling_circle_background_color">#64b1ea</color>
+    
+    <color name="Black_transparent">#80000000</color>
 </resources>

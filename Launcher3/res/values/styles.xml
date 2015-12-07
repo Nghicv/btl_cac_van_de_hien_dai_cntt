@@ -166,4 +166,9 @@
     </style>
     <style name="CustomClingText">
     </style>
+    
+    <style name="AnimationsDialog">
+        <item name="@android:windowEnterAnimation">@anim/slide_in_top_dialog</item>
+        <item name="@android:windowExitAnimation">@anim/slide_out_bottom_dialog</item>
+    </style>
 </resources>

@@ -134,6 +134,7 @@ import phuong.SortApp;
 public class Launcher extends Activity implements View.OnClickListener,
 		OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {
 
+	ImageView voice;
 	Point size;
 	Display display;
 	boolean show_right_view = false;
@@ -146,6 +147,8 @@ public class Launcher extends Activity implements View.OnClickListener,
 	DrawerAdapter adapter;
 	public static int topMargin = 300;
 	boolean isTouch = false;
+
+	boolean isSearchVoice = false;
 
 	// //////////////////////////////////////////////////////////
 	static final String TAG = "Launcher";
@@ -589,11 +592,6 @@ public class Launcher extends Activity implements View.OnClickListener,
 				}
 			}
 		});
-		Log.d("phuong", "x: " +size.x);
-		Log.d("phuong" , "y: " + size.y );
-		
-		
-		
 		
 		icon.setOnTouchListener(new OnTouchListener() {
 
@@ -605,22 +603,23 @@ public class Launcher extends Activity implements View.OnClickListener,
 					isTouch = true;
 					LayoutParams lp = new RelativeLayout.LayoutParams(v
 							.getWidth(), v.getHeight());
-					lp.leftMargin = (int) event.getRawX() - v.getWidth() / 2;
-					if(lp.leftMargin > size.x - 100){
-						lp.leftMargin = size.x - 100;
+					int x = drawer.getWidth();
+					if (drawer.isOpened()) {
+						lp.leftMargin = x;
+					} else {
+						lp.leftMargin = 0;
 					}
-					if(event.getRawY() + 80 < size.y){
+
+					if (event.getRawY() + 80 < size.y) {
 						topMargin = (int) event.getRawY() - v.getHeight() / 2;
-						if(topMargin < 20){
+						if (topMargin < 20) {
 							topMargin = 20;
 						}
 					} else {
-						topMargin = size.y  - v.getHeight() - 5;
-						Log.d("phuong", "top margin: "+ topMargin);
+						topMargin = size.y - v.getHeight() - 5;
+						Log.d("phuong", "top margin: " + topMargin);
 					}
-			
-					
-					
+
 					lp.topMargin = topMargin;
 
 					v.setLayoutParams(lp);
@@ -629,20 +628,41 @@ public class Launcher extends Activity implements View.OnClickListener,
 
 					LayoutParams lpp = new RelativeLayout.LayoutParams(v
 							.getWidth(), v.getHeight());
-					int x = drawer.getWidth();
+					int z = drawer.getWidth();
 					if (drawer.isOpened()) {
-						lpp.leftMargin = x;
+						lpp.leftMargin = z;
 					} else {
 						lpp.leftMargin = 0;
 					}
 					lpp.topMargin = topMargin;
 					v.setLayoutParams(lpp);
-					
+
 					isTouch = false;
 
 				}
 
 				return false;
+			}
+		});
+
+		voice = (ImageView) ll.findViewById(R.id.search_voice);
+
+		voice.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				isSearchVoice = true;
+				Intent intent = new Intent(
+						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+						RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+				intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+				try {
+					startActivityForResult(intent, 1);
+				} catch (ActivityNotFoundException a) {
+					a.printStackTrace();
+				}
 			}
 		});
 
@@ -960,6 +980,61 @@ public class Launcher extends Activity implements View.OnClickListener,
 	protected void onActivityResult(final int requestCode,
 			final int resultCode, final Intent data) {
 		// Reset the startActivity waiting flag
+
+		if (isSearchVoice == true) {
+			switch (requestCode) {
+			case 1: {
+				if (resultCode == -1 && null != data) {
+					ArrayList<String> text = data
+							.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+					// Result;
+					String r = text.get(0);
+					// Toast.makeText(Launcher.this, r,
+					// Toast.LENGTH_SHORT).show();
+					int i;
+					boolean hasApp = false;
+					for (i = 0; i < pacs.size(); i++) {
+						if (pacs.get(i).label.toLowerCase().equals(
+								r.toLowerCase())) {
+
+							Intent laucherIntent = new Intent(
+									Intent.ACTION_MAIN);
+							ComponentName cp = new ComponentName(
+									pacs.get(i).packageName, pacs.get(i).name);
+							laucherIntent.setComponent(cp);
+							startActivity(laucherIntent);
+							hasApp = true;
+							break;
+						}
+					}
+					if (hasApp == false) {
+
+						for (i = 0; i < pacs.size(); i++) {
+							if (pacs.get(i).label.toLowerCase().contains(
+									(r.toLowerCase()))) {
+
+								Intent laucherIntent = new Intent(
+										Intent.ACTION_MAIN);
+								ComponentName cp = new ComponentName(
+										pacs.get(i).packageName,
+										pacs.get(i).name);
+								laucherIntent.setComponent(cp);
+								startActivity(laucherIntent);
+								hasApp = true;
+								break;
+							}
+						}
+					}
+					if (hasApp == false) {
+						Toast.makeText(Launcher.this, "Không thấy app: " + r,
+								Toast.LENGTH_SHORT).show();
+					}
+				}
+				break;
+			}
+			}
+			isSearchVoice = false;
+		}
 		mWaitingForResult = false;
 
 		if (requestCode == REQUEST_BIND_APPWIDGET) {
@@ -1027,6 +1102,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 		// configuration of a widget
 		exitSpringLoadedDragModeDelayed((resultCode != RESULT_CANCELED),
 				delayExitSpringLoadedMode, null);
+
 	}
 
 	private void completeTwoStageWidgetDrop(final int resultCode,

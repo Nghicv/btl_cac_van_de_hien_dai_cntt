@@ -1,0 +1,5 @@
+package com.android.launcher3.customview.model;
+
+public class AppInfor {
+
+}

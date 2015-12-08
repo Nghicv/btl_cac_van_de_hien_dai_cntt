@@ -18,6 +18,7 @@
 package com.android.launcher3;
 
 import android.accounts.Account;
+
 import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,6 +30,9 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
@@ -65,6 +69,8 @@ import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -98,6 +104,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.launcher3.DropTarget.DragObject;
+import com.android.launcher3.customview.FragmentAllApp;
 import com.android.launcher3.customview.GridActivity;
 
 import java.io.DataInputStream;
@@ -121,9 +128,13 @@ import java.util.List;
 public class Launcher extends Activity
         implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks,
                    View.OnTouchListener {
+	private boolean showFragmentAllApp = false;
+	private  FragmentManager fm;
+	private FragmentTransaction ft;
+	private Fragment mFragment;
     static final String TAG = "Launcher";
     static final boolean LOGD = false;
-
+    
     static final boolean PROFILE_STARTUP = false;
     static final boolean DEBUG_WIDGETS = false;
     static final boolean DEBUG_STRICT_MODE = false;
@@ -338,6 +349,7 @@ public class Launcher extends Activity
                 mWorkspace.buildPageHardwareLayers();
             }
         }
+
     };
 
     private static ArrayList<PendingAddArguments> sPendingAddList
@@ -2109,6 +2121,7 @@ public class Launcher extends Activity
             } else {
                 showOverviewMode(true);
             }
+            
         } else if (mWorkspace.isInOverviewMode()) {
             mWorkspace.exitOverviewMode(true);
         } else if (mWorkspace.getOpenFolder() != null) {
@@ -2124,6 +2137,11 @@ public class Launcher extends Activity
             // Back button is a no-op here, but give at least some feedback for the button press
             mWorkspace.showOutlinesTemporarily();
         }
+        if(showFragmentAllApp){
+        	mFragment.getView().setVisibility(View.GONE);
+        	showFragmentAllApp = false;
+        }
+    	
     }
 
     /**
@@ -2271,9 +2289,16 @@ public class Launcher extends Activity
     // show all app in here
     
     public void onClickAllAppsButton(View v) {
-        showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
-    	Intent i = new Intent(Launcher.this, GridActivity.class);
-    	startActivity(i);
+       showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+    	//Intent i = new Intent(Launcher.this, GridActivity.class);
+    	//startActivity(i);
+       fm = getFragmentManager();
+       ft = fm.beginTransaction();
+       mFragment = new FragmentAllApp();
+       ft.add(R.id.launcher, mFragment);
+       ft.commit();
+       showFragmentAllApp = true;
+        
     }
 
     public void onTouchDownAllAppsButton(View v) {

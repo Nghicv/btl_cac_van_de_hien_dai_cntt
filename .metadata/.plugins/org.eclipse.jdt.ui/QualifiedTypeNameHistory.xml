@@ -8,5 +8,10 @@
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="com.android.launcher3.Launcher"/>
 <fullyQualifiedTypeName name="com.android.launcher3.customview.GridActivity"/>
+<fullyQualifiedTypeName name="android.app.Fragment"/>
+<fullyQualifiedTypeName name="android.app.FragmentTransaction"/>
+<fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="android.graphics.Bitmap"/>
+<fullyQualifiedTypeName name="android.support.v7.widget.RecyclerView"/>
 </qualifiedTypeNameHistroy>

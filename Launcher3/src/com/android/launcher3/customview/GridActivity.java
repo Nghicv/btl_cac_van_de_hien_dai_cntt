@@ -1,6 +1,7 @@
 package com.android.launcher3.customview;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,10 +20,11 @@ import android.widget.Toast;
 
 import com.android.launcher3.R;
 import com.android.launcher3.customview.SimpleSectionedGridAdapter.Section;
+import com.android.launcher3.customview.model.AppInfor;
 
 public class GridActivity extends CacheActivity {
 
-
+	
 	private GridView grid;
 	private ImageAdapter mAdapter;
 	private ArrayList<Section> sections = new ArrayList<Section>();
@@ -149,4 +151,5 @@ public class GridActivity extends CacheActivity {
 			return (T) childView;
 		}
 	}
+	
 }

@@ -1,0 +1,13 @@
+package com.android.launcher3.customview.model;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+
+public class AppInfor {
+	private String title;
+	private String packetName;
+	private Intent intent;
+	private Bitmap bitmap;
+	private String name;
+	private String label;
+}

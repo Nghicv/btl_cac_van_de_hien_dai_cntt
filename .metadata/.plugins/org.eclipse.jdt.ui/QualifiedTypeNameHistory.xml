@@ -9,4 +9,9 @@
 <fullyQualifiedTypeName name="com.android.launcher3.Launcher"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="android.speech.RecognizerIntent"/>
+<fullyQualifiedTypeName name="com.android.launcher3.customview.model.AppInfor"/>
+<fullyQualifiedTypeName name="android.app.FragmentManager"/>
+<fullyQualifiedTypeName name="android.app.FragmentTransaction"/>
+<fullyQualifiedTypeName name="android.app.Fragment"/>
+<fullyQualifiedTypeName name="com.android.launcher3.customview.FragmentAllApp"/>
 </qualifiedTypeNameHistroy>

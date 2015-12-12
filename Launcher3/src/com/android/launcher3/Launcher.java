@@ -28,6 +28,9 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
@@ -107,6 +110,7 @@ import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.android.launcher3.DropTarget.DragObject;
+import com.android.launcher3.customview.FragmentAllApp;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -133,6 +137,13 @@ import phuong.SortApp;
  */
 public class Launcher extends Activity implements View.OnClickListener,
 		OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {
+	
+	
+	private boolean showFragmentAllApp = false;
+	private  FragmentManager fm;
+	private FragmentTransaction ft;
+	private Fragment mFragment;
+    
 
 	ImageView voice;
 	Point size;
@@ -148,7 +159,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 	public static int topMargin = 300;
 	boolean isTouch = false;
 
-	boolean isSearchVoice = false;
+	public static boolean isSearchVoice = false;
 
 	// //////////////////////////////////////////////////////////
 	static final String TAG = "Launcher";
@@ -667,6 +678,19 @@ public class Launcher extends Activity implements View.OnClickListener,
 		});
 
 		setPacs();
+	}
+	public void search_voice(){
+		isSearchVoice = true;
+		Intent intent = new Intent(
+				RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+		intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+		try {
+			startActivityForResult(intent, 1);
+		} catch (ActivityNotFoundException a) {
+			a.printStackTrace();
+		}
 	}
 
 	public void setPacs() {
@@ -2570,7 +2594,11 @@ public class Launcher extends Activity implements View.OnClickListener,
 
 	@Override
 	public void onBackPressed() {
-
+		if(showFragmentAllApp){
+        	mFragment.getView().setVisibility(View.GONE);
+        	showFragmentAllApp = false;
+        }
+		
 		if (gridView.isEditMode()) {
 			gridView.stopEditMode();
 		} else {
@@ -2750,7 +2778,15 @@ public class Launcher extends Activity implements View.OnClickListener,
 	 *            The view that was clicked.
 	 */
 	public void onClickAllAppsButton(View v) {
-		showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+		//showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+		fm = getFragmentManager();
+	    ft = fm.beginTransaction();
+	    ft.setCustomAnimations(R.animator.open_app, 0, 0, 0);
+	    mFragment = new FragmentAllApp();
+	    ft.add(R.id.launcher, mFragment);
+	     
+	    ft.commit();
+	    showFragmentAllApp = true;
 	}
 
 	public void onTouchDownAllAppsButton(View v) {

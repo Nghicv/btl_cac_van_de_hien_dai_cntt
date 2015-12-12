@@ -7,21 +7,23 @@ public class AppInfor {
 	private String title;
 	private String packetName;
 	private Intent intent;
-	private Drawable Drawable;
+	private Drawable icon;
 	private String name;
 	private String label;
 	
 	
+	public AppInfor() {
+		super();
+	}
+
 	public AppInfor(String packetName, Drawable Drawable, String name, String label) {
 		super();
 		this.packetName = packetName;
-		this.Drawable = Drawable;
+		this.icon = Drawable;
 		this.name = name;
 		this.label = label;
 	}
 	
-	
-
 	public AppInfor(String packetName, String name, String label) {
 		super();
 		this.packetName = packetName;
@@ -31,6 +33,8 @@ public class AppInfor {
 
 
 	public String getTitle() {
+		String s = label.substring(0, 1);
+		title = s.toUpperCase();
 		return title;
 	}
 	public void setTitle(String title) {
@@ -48,11 +52,11 @@ public class AppInfor {
 	public void setIntent(Intent intent) {
 		this.intent = intent;
 	}
-	public Drawable getDrawable() {
-		return Drawable;
+	public Drawable getIcon() {
+		return icon;
 	}
-	public void setDrawable(Drawable Drawable) {
-		this.Drawable = Drawable;
+	public void setIcon(Drawable icon) {
+		this.icon = icon;
 	}
 	public String getName() {
 		return name;

@@ -2,12 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:padding="10dp">
-
-    <com.android.launcher3.customview.SquareImageView
+    android:padding="10dp"
+    android:layout_gravity="center">
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical">
+	    <com.android.launcher3.customview.SquareImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/empty_photo" />
+        android:src="@drawable/empty_photo" 
+        android:layout_gravity="center"/>
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:layout_marginTop="2dp"
+	        android:id="@+id/tvLabel"/>
+	</LinearLayout>
+    
 </FrameLayout>

@@ -1,0 +1,210 @@
+package com.android.launcher3.customview;
+
+import java.util.ArrayList;
+
+import java.util.List;
+import java.util.jar.Pack200.Packer;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.launcher3.R;
+import com.android.launcher3.customview.SimpleSectionedGridAdapter.Section;
+import com.android.launcher3.customview.model.AppInfor;
+
+public class FragmentAllApp extends android.app.Fragment {
+	private PackageManager pm;
+	private List<AppInfor> data = new ArrayList<AppInfor>();
+	private GridView grid;
+	private ImageAdapter mAdapter;
+	private ArrayList<Section> sections = new ArrayList<Section>();
+	private View view;
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		pm = getActivity().getPackageManager();
+		view= LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.activity_grid, null);
+		initData();
+		initControls();
+		
+		return view;
+	}
+
+	private void initControls() {
+		grid = (GridView)view.findViewById(R.id.grid);
+		mAdapter = new ImageAdapter(getActivity());
+		for (int i = 0; i < positionTitles.size(); i++) {
+			sections.add(new Section(positionTitles.get(i), titles.get(i)));
+		}
+		SimpleSectionedGridAdapter simpleSectionedGridAdapter = new SimpleSectionedGridAdapter(getActivity(), mAdapter,
+				R.layout.grid_item_header, R.id.header_layout, R.id.header);
+		simpleSectionedGridAdapter.setGridView(grid);
+		simpleSectionedGridAdapter.setSections(sections.toArray(new Section[0]));
+		grid.setAdapter(simpleSectionedGridAdapter);
+		grid.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), "clicked: "+position, 3).show();
+			}
+		});
+		grid.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), "clicked: "+position, 3).show();
+				return true;
+			}
+		});
+	}
+	private void initData(){
+		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+		List<ResolveInfo> listApps = pm.queryIntentActivities(mainIntent, 0);
+		for (ResolveInfo ri : listApps) {
+			AppInfor app = new AppInfor();
+			app.setIcon(ri.loadIcon(pm));
+			app.setName(ri.activityInfo.name);
+			app.setPacketName(ri.activityInfo.packageName);
+			app.setLabel(ri.loadLabel(pm).toString());
+			data.add(app);
+		}
+		selectionSort(data);
+		for(int i = 0; i < data.size(); i++){
+			AppInfor app = data.get(i);
+			String title = app.getTitle();
+			String lastTitle = "";
+			if(titles.size()!=0){
+				 lastTitle = titles.get(titles.size()-1);
+			}
+			if(lastTitle.compareTo(title) != 0){
+				titles.add(title);
+				positionTitles.add(i);
+			}
+			Log.d("nghicv", title);
+			
+		}
+		
+	}
+	
+	private void selectionSort(List<AppInfor> listApps){
+		for(int i = 0; i<listApps.size(); i++){
+			AppInfor min = listApps.get(i);
+			AppInfor temp = listApps.get(i);
+			int position = i;
+			for(int j = i; j<listApps.size(); j++){
+				if(listApps.get(j).getLabel().compareTo(min.getLabel())<0){
+					min = listApps.get(j);
+					position = j;
+				}
+			}
+			listApps.set(position, temp);
+			listApps.set(i, min);
+		}
+	}
+	
+	private void quickSort(int left, int right, List<AppInfor> list){
+		int i = left;
+		int j = right;
+		AppInfor privot = list.get((i+j)/2);
+		while(i<=j){
+			while(list.get(i).getLabel().compareTo(privot.getLabel())<=0){
+				i++;
+			}
+			while(list.get(j).getLabel().compareTo(privot.getLabel())>=0){
+				j--;
+			}
+		}
+	}
+	
+	private void exchangeNumbers(int i, int j, List<AppInfor> list) {
+		AppInfor temp = 
+	}
+	
+	private class ImageAdapter extends BaseAdapter{
+		
+		private LayoutInflater mInflater;
+
+		public ImageAdapter(Context context) {
+			mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ImageView image;
+			
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.grid_item, parent, false);
+			}
+
+			image = ViewHolder.get(convertView, R.id.image);
+			image.setImageDrawable(data.get(position).getIcon());
+			TextView tvLabel = ViewHolder.get(convertView, R.id.tvLabel);
+			tvLabel.setText(data.get(position).getLabel());
+			return convertView;
+		}
+	}
+    
+    private List<String> titles = new ArrayList<String>();
+    private List<Integer> positionTitles = new ArrayList<Integer>();
+
+	public static class ViewHolder {
+		@SuppressWarnings("unchecked")
+		public static <T extends View> T get(View view, int id) {
+			SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
+			if (viewHolder == null) {
+				viewHolder = new SparseArray<View>();
+				view.setTag(viewHolder);
+			}
+			View childView = viewHolder.get(id);
+			if (childView == null) {
+				childView = view.findViewById(id);
+				viewHolder.put(id, childView);
+			}
+			return (T) childView;
+		}
+	}
+	
+	private void onScroll() {
+		// TODO Auto-generated method stub
+	}
+}

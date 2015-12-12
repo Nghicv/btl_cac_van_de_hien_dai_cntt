@@ -15,6 +15,6 @@
         android:layout_marginBottom="1dp"
         android:gravity="center_vertical"
         android:textColor="#e91e63"
-        android:textStyle="bold"/>
-
+        android:textStyle="bold"
+        android:textSize="40px"/>
 </com.android.launcher3.customview.HeaderLayout>

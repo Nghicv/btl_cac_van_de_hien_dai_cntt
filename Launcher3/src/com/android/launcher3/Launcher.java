@@ -2114,7 +2114,7 @@ public class Launcher extends Activity
 
     @Override
     public void onBackPressed() {
-        if (isAllAppsVisible()) {
+       /* if (isAllAppsVisible()) {
             if (mAppsCustomizeContent.getContentType() ==
                     AppsCustomizePagedView.ContentType.Applications) {
                 showWorkspace(true);
@@ -2136,7 +2136,7 @@ public class Launcher extends Activity
 
             // Back button is a no-op here, but give at least some feedback for the button press
             mWorkspace.showOutlinesTemporarily();
-        }
+        }*/
         if(showFragmentAllApp){
         	mFragment.getView().setVisibility(View.GONE);
         	showFragmentAllApp = false;
@@ -2289,13 +2289,15 @@ public class Launcher extends Activity
     // show all app in here
     
     public void onClickAllAppsButton(View v) {
-       showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+       //showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
     	//Intent i = new Intent(Launcher.this, GridActivity.class);
     	//startActivity(i);
        fm = getFragmentManager();
        ft = fm.beginTransaction();
+       ft.setCustomAnimations(R.animator.open_app, 0, 0, 0);
        mFragment = new FragmentAllApp();
        ft.add(R.id.launcher, mFragment);
+     
        ft.commit();
        showFragmentAllApp = true;
         

@@ -1,12 +1,18 @@
 package com.android.launcher3.customview;
 
 import java.util.ArrayList;
+
+
 import java.util.List;
 import java.util.jar.Pack200.Packer;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +24,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.launcher3.R;
@@ -25,7 +32,7 @@ import com.android.launcher3.customview.SimpleSectionedGridAdapter.Section;
 import com.android.launcher3.customview.model.AppInfor;
 
 public class FragmentAllApp extends android.app.Fragment {
-	
+	private PackageManager pm;
 	private List<AppInfor> data = new ArrayList<AppInfor>();
 	private GridView grid;
 	private ImageAdapter mAdapter;
@@ -36,17 +43,18 @@ public class FragmentAllApp extends android.app.Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		pm = getActivity().getPackageManager();
 		view= LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.activity_grid, null);
+		initData();
 		initControls();
-		
 		return view;
 	}
 
 	private void initControls() {
 		grid = (GridView)view.findViewById(R.id.grid);
 		mAdapter = new ImageAdapter(getActivity());
-		for (int i = 0; i < mHeaderPositions.length; i++) {
-			sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
+		for (int i = 0; i < positionTitles.size(); i++) {
+			sections.add(new Section(positionTitles.get(i), titles.get(i)));
 		}
 		SimpleSectionedGridAdapter simpleSectionedGridAdapter = new SimpleSectionedGridAdapter(getActivity(), mAdapter,
 				R.layout.grid_item_header, R.id.header_layout, R.id.header);
@@ -74,8 +82,83 @@ public class FragmentAllApp extends android.app.Fragment {
 		});
 	}
 	private void initData(){
+		final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+		List<ResolveInfo> listApps = pm.queryIntentActivities(mainIntent, 0);
+		for (ResolveInfo ri : listApps) {
+			AppInfor app = new AppInfor();
+			app.setIcon(ri.loadIcon(pm));
+			app.setName(ri.activityInfo.name);
+			app.setPacketName(ri.activityInfo.packageName);
+			app.setLabel(ri.loadLabel(pm).toString());
+			data.add(app);
+		}
+		//selectionSort(data);
+		quickSort(0, data.size()-1, data);
+		for(int i = 0; i < data.size(); i++){
+			AppInfor app = data.get(i);
+			String title = app.getTitle();
+			String lastTitle = "";
+			if(titles.size()!=0){
+				 lastTitle = titles.get(titles.size()-1);
+			}
+			if(lastTitle.compareTo(title) != 0){
+				titles.add(title);
+				positionTitles.add(i);
+			}
+			Log.d("nghicv", title);
+			
+		}
 		
+	}
+	
+	private void selectionSort(List<AppInfor> listApps){
+		for(int i = 0; i<listApps.size(); i++){
+			AppInfor min = listApps.get(i);
+			AppInfor temp = listApps.get(i);
+			int position = i;
+			for(int j = i; j<listApps.size(); j++){
+				if(listApps.get(j).getLabel().compareTo(min.getLabel())<0){
+					min = listApps.get(j);
+					position = j;
+				}
+			}
+			listApps.set(position, temp);
+			listApps.set(i, min);
+		}
+	}
+	
+	private void quickSort(int left, int right, List<AppInfor> list){
+		int i = left;
+		int j = right;
+		AppInfor privot = list.get((i+j)/2);
+		while(i<=j){
+			while(list.get(i).getLabel().compareTo(privot.getLabel())<0){
+				i++;
+			}
+			while(list.get(j).getLabel().compareTo(privot.getLabel())>0){
+				j--;
+			}
+			
+			if(i <= j){
+				exchangeNumbers(i, j, list);
+				i++;
+				j--;
+			}
+		}
 		
+		if(left <= j){
+			quickSort(left, j, list);
+		}
+		if(right >= i){
+			quickSort(i, right, list);
+		}
+	}
+	
+	private void exchangeNumbers(int i, int j, List<AppInfor> list) {
+		AppInfor temp = list.get(i);
+		list.set(i, list.get(j));
+		list.set(j, temp);
 	}
 	
 	private class ImageAdapter extends BaseAdapter{
@@ -88,7 +171,7 @@ public class FragmentAllApp extends android.app.Fragment {
 
 		@Override
 		public int getCount() {
-			return mImageIds.length;
+			return data.size();
 		}
 
 		@Override
@@ -110,27 +193,15 @@ public class FragmentAllApp extends android.app.Fragment {
 			}
 
 			image = ViewHolder.get(convertView, R.id.image);
-			image.setImageResource(mImageIds[position]);
+			image.setImageDrawable(data.get(position).getIcon());
+			TextView tvLabel = ViewHolder.get(convertView, R.id.tvLabel);
+			tvLabel.setText(data.get(position).getLabel());
 			return convertView;
 		}
-
 	}
-	
-    private Integer[] mImageIds = { 
-    		R.drawable.cat1,R.drawable.cat2,R.drawable.cat3,R.drawable.cat4,R.drawable.cat5,R.drawable.cat6,R.drawable.cat7,R.drawable.cat8,R.drawable.cat9,R.drawable.cat10,
-    		R.drawable.cat11,R.drawable.cat12,R.drawable.cat13,R.drawable.cat14,R.drawable.cat15,R.drawable.cat16,R.drawable.cat17,R.drawable.cat18,R.drawable.cat19,R.drawable.cat20,
-    		R.drawable.cat21,R.drawable.cat22,R.drawable.cat23,R.drawable.cat24,R.drawable.cat25,R.drawable.cat26,R.drawable.cat27,R.drawable.cat28,R.drawable.cat29,R.drawable.cat30,
-    		R.drawable.cat31,R.drawable.cat32,R.drawable.cat33,R.drawable.cat34,R.drawable.cat35,R.drawable.cat36,R.drawable.cat37,R.drawable.cat38,R.drawable.cat39,R.drawable.cat40,
-    		R.drawable.cat41,R.drawable.cat42,R.drawable.cat43,R.drawable.cat44,R.drawable.cat45,R.drawable.cat46,R.drawable.cat47,R.drawable.cat48,R.drawable.cat49,R.drawable.cat50,
-    		R.drawable.cat51,R.drawable.cat52,R.drawable.cat53,R.drawable.cat54,R.drawable.cat55,R.drawable.cat56,R.drawable.cat57,R.drawable.cat58,R.drawable.cat59,R.drawable.cat60,
-    		R.drawable.cat61,R.drawable.cat62,R.drawable.cat63,R.drawable.cat64,R.drawable.cat65,R.drawable.cat66,R.drawable.cat67,R.drawable.cat68,R.drawable.cat69,R.drawable.cat70,
-    		R.drawable.cat71,R.drawable.cat72,R.drawable.cat73,R.drawable.cat74,R.drawable.cat75,R.drawable.cat76,R.drawable.cat77,R.drawable.cat78,R.drawable.cat79,R.drawable.cat80,
-    		R.drawable.cat81,R.drawable.cat82,R.drawable.cat83,R.drawable.cat84,R.drawable.cat85,R.drawable.cat86,R.drawable.cat87,R.drawable.cat88,R.drawable.cat89,R.drawable.cat90,
-    		R.drawable.cat91,R.drawable.cat92,R.drawable.cat93,R.drawable.cat94,R.drawable.cat95,R.drawable.cat96,R.drawable.cat97,R.drawable.cat98,R.drawable.cat99,R.drawable.cat100,
-    };
     
-    private String[] mHeaderNames = { "Cute Cats", "Few Cats", "Some Cats", "Some More Cats", "Some More More Cats", "Many Cats", "Many Many Cats", "So Many Cats" };
-    private Integer[] mHeaderPositions = { 0, 6, 11, 37, 38, 60, 77, 89 };
+    private List<String> titles = new ArrayList<String>();
+    private List<Integer> positionTitles = new ArrayList<Integer>();
 
 	public static class ViewHolder {
 		@SuppressWarnings("unchecked")

@@ -330,15 +330,16 @@ public class SimpleSectionedGridAdapter extends BaseAdapter implements PinnedSec
         } else {
             convertView = mBaseAdapter.getView(sectionedPositionToPosition(position), convertView, parent);
         	mLastViewSeen = convertView; 
+        	
         	convertView.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					//TextView tv = v.findViewById(R.id.tvLabel);
+					Toast.makeText(mContext, "nbbfnb", 1).show();
+					TextView v = (TextView) convertView.findViewById(R.id.tvLabel);
 				}
 			});
-        	
         }
         return convertView;
     }

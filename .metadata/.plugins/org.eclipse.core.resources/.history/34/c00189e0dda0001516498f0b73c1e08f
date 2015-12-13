@@ -19,22 +19,18 @@ package com.android.launcher3.customview;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import android.R;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.launcher3.Launcher;
 import com.android.launcher3.customview.PinnedSectionGridView.PinnedSectionGridAdapter;
 
 public class SimpleSectionedGridAdapter extends BaseAdapter implements PinnedSectionGridAdapter{
@@ -330,15 +326,6 @@ public class SimpleSectionedGridAdapter extends BaseAdapter implements PinnedSec
         } else {
             convertView = mBaseAdapter.getView(sectionedPositionToPosition(position), convertView, parent);
         	mLastViewSeen = convertView; 
-        	convertView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					//TextView tv = v.findViewById(R.id.tvLabel);
-				}
-			});
-        	
         }
         return convertView;
     }

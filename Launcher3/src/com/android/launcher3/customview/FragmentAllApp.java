@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.net.VpnService;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
@@ -92,27 +93,21 @@ public class FragmentAllApp extends android.app.Fragment {
 			@Override
 			public void onScrollStateChanged(AbsListView absListView,
 					int firstVisibleItem) {
-				View view = absListView.getChildAt(0);
-				int top = (view == null) ? 0 : view.getTop();
-
-				if (firstVisibleItem < oldFirstVisibleItem) {
-					voice.setVisibility(View.VISIBLE);
-					
-				} else {
-					voice.setVisibility(View.GONE);
-				}
 				
-				
-
-				oldFirstVisibleItem = firstVisibleItem;
-
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				// TODO Auto-generated method stub
-
+				
+				int currentItem = view.getLastVisiblePosition();
+				
+				if(currentItem>=totalItemCount-1){
+					voice.setVisibility(View.GONE);
+				}else{
+					voice.setVisibility(View.VISIBLE);
+				}
 			}
 		});
 		return view;
@@ -138,7 +133,36 @@ public class FragmentAllApp extends android.app.Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				//Toast.makeText(getActivity(), "clicked: " + position, 1).show();
+				StringBuilder s = new StringBuilder();
+				for(int i = 0; i<positionTitles.size();i++){
+					Log.d("nghicv", positionTitles.get(i) + " ");
+					s.append(positionTitles.get(i));
+					s.append(" ");
+				}
+				int countTitle = 0;
+				int space = 0;
+				for(int i = 0; i < positionTitles.size(); i++){
+					if(position >= (countTitle*3)+(positionTitles.get(i)+space)){
+						Log.d("nghicv", positionTitles.get(i)+" ");
+						countTitle++;
+						
+						if(i!=0){
+							int j = i-1;
+							int numApp = positionTitles.get(i)-positionTitles.get(j);
+							if(numApp % 3 !=0){
+								space = space + 3 - (numApp % 3);
+							}
+						}
+					}else{
+						break;
+					}
+				}
+				int positionItem = position - countTitle*3 - space;
+				AppInfor app = data.get(positionItem);
+				Intent laucherIntent = new Intent(Intent.ACTION_MAIN);
+				ComponentName cp = new ComponentName(app.getPacketName(), app.getName());
+				laucherIntent.setComponent(cp);
+				startActivity(laucherIntent);
 			}
 		});
 		grid.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -147,7 +171,9 @@ public class FragmentAllApp extends android.app.Fragment {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "clicked: " + position, 3).show();
+				
+				
+				
 				return true;
 			}
 		});

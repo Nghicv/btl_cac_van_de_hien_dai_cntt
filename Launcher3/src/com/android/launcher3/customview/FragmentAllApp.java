@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.launcher3.AppsCustomizePagedView;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.customview.SimpleSectionedGridAdapter.Section;
@@ -52,6 +53,8 @@ public class FragmentAllApp extends android.app.Fragment {
 	private static int oldFirstVisibleItem;
 	
 	boolean isShow = true;
+	
+	ImageView img_seclect_screen;
 
 	ButtonFloat voice;
 
@@ -64,7 +67,17 @@ public class FragmentAllApp extends android.app.Fragment {
 				R.layout.activity_grid, null);
 		initData();
 		initControls();
-
+		img_seclect_screen = (ImageView) view.findViewById(R.id.select_screen);
+		
+		img_seclect_screen.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Launcher.thiz.showAllApps(true, AppsCustomizePagedView.ContentType.Applications, true);
+				Launcher.thiz.mFragment.getView().setVisibility( View.GONE);
+			}
+		});
 		voice.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.voice_ic));
 		voice.setRippleColor(Color.RED);

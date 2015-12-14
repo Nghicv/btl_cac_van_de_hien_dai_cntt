@@ -1,0 +1,31 @@
+package com.android.launcher3.customview;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.view.Window;
+import android.widget.RelativeLayout;
+
+import com.android.launcher3.R;
+
+public class MyDialog extends Dialog{
+	Activity activity;
+	RelativeLayout dialog_layout;
+	
+	public MyDialog(Activity activity) {
+		super(activity);
+		this.activity = activity;
+		
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().getAttributes().windowAnimations = R.style.Animations_Dialog;
+
+
+		setContentView(R.layout.dialog_layout);
+		dialog_layout = (RelativeLayout) findViewById(R.id.layout_dialog);
+		dialog_layout.getLayoutParams().height = activity.getWindowManager()
+				.getDefaultDisplay().getHeight() * 1 / 4;
+		dialog_layout.getLayoutParams().width = activity.getWindowManager()
+				.getDefaultDisplay().getWidth() * 8 / 10;
+	}
+
+}

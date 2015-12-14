@@ -142,9 +142,10 @@ public class Launcher extends Activity implements View.OnClickListener,
 	private boolean showFragmentAllApp = false;
 	private  FragmentManager fm;
 	private FragmentTransaction ft;
-	private Fragment mFragment;
+	public Fragment mFragment;
     
-
+	public static Launcher thiz;
+	
 	ImageView voice;
 	Point size;
 	Display display;
@@ -529,7 +530,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 		 * Begin custom
 		 * $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 		 */
-
+		thiz = this;
 		addMyView();
 	}
 
@@ -3660,7 +3661,7 @@ public class Launcher extends Activity implements View.OnClickListener,
 	public void onWorkspaceShown(boolean animated) {
 	}
 
-	void showAllApps(boolean animated,
+	public void showAllApps(boolean animated,
 			AppsCustomizePagedView.ContentType contentType,
 			boolean resetPageToZero) {
 		if (mState != State.WORKSPACE)

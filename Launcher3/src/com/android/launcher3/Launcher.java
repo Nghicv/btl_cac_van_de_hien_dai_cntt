@@ -92,6 +92,9 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -2595,6 +2598,33 @@ public class Launcher extends Activity implements View.OnClickListener,
 
 	@Override
 	public void onBackPressed() {
+		if(showFragmentAllApp){
+        	final View v = mFragment.getView();
+        	Animation anim = AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_out_all_app);
+        	anim.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					// TODO Auto-generated method stub
+					v.setVisibility(View.GONE);
+				}
+			});
+        	v.startAnimation(anim);
+        	
+        	showFragmentAllApp = false;
+        }
 		if(showFragmentAllApp){
         	mFragment.getView().setVisibility(View.GONE);
         	showFragmentAllApp = false;

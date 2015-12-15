@@ -79,7 +79,7 @@ public class FragmentAllApp extends android.app.Fragment {
 			}
 		});
 		voice.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.voice_ic));
+				R.drawable.search_voice_ic));
 		voice.setRippleColor(Color.RED);
 
 		voice.setOnClickListener(new OnClickListener() {

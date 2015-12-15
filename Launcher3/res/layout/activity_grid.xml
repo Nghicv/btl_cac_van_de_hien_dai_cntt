@@ -24,19 +24,19 @@
         android:verticalSpacing="0dp" />
 
     <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
         android:id="@+id/select_screen"
-        android:src="@drawable/ic_allapps"/>
+        android:src="@drawable/ic_all_app_default"/>
 
     <phuong.ButtonFloat
         android:id="@+id/voice_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"

@@ -37,4 +37,7 @@
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="com.android.launcher3.AppsCustomizePagedView"/>
 <fullyQualifiedTypeName name="com.android.launcher3.Launcher"/>
+<fullyQualifiedTypeName name="android.view.animation.AnimationUtils"/>
+<fullyQualifiedTypeName name="android.view.animation.Animation"/>
+<fullyQualifiedTypeName name="android.view.animation.Animation.AnimationListener"/>
 </qualifiedTypeNameHistroy>
